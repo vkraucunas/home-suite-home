@@ -13,3 +13,6 @@
 
 * `/lights/off`
     * Turns off all lights
+
+* `/lights/:id:/on` && `/lights/:id/off` 
+    * Turns on/off light by id

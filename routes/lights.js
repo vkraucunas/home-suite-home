@@ -21,20 +21,35 @@ router.get('/', function(req, res, next) {
           });
 });
 
+router.get('/:id/on', function(req, res, next) {
+    let id = req.params.id;
+    modifyLightById(id, turnOn).then(result => {
+        res.send(result);
+    })
+});
+
+router.get('/:id/off', function(req,res,next) {
+    let id = req.params.id;
+    modifyLightById(id, turnOff).then(result => {
+        res.send(result);   
+    })
+});
+
+
 /* GET users listing. */
 router.get('/on', function(req, res, next) {
-  modifyGroupById(0,turnGroupOn);
+  modifyGroupById(0,turnOn);
   res.send({});
 });
 
 router.get('/off', function(req, res, next) {
-    modifyGroupById(0, turnGroupOff);
+    modifyGroupById(0, turnOff);
     res.send({});
 });
 
 
 function modifyGroupById(id, modifierFunction) {
-	client.groups.getById(id)
+	return client.groups.getById(id)
 	  .then(group => {
           let tempGroup = modifierFunction(group);
 	 
@@ -48,21 +63,29 @@ function modifyGroupById(id, modifierFunction) {
 	  });
 }
 
-function turnGroupOff(group) {
+function modifyLightById(id, modifierFunction) {
+    return client.lights.getById(id).then(light => {
+        return client.lights.save(modifierFunction(light));
+    }).catch(err => {
+        console.log(err);
+    })
+}
+
+function turnOff(obj) {
     let modifier = {
         on: false,
         brightness: 0
     }
 
-    return Object.assign(group, modifier)
+    return Object.assign(obj, modifier)
 }
 
-function turnGroupOn(group) {
+function turnOn(obj) {
     let modifier = {
         on: true,
         brightness: 254
     };
 
-    return Object.assign(group, modifier);
+    return Object.assign(obj, modifier);
 }
 module.exports = router;
