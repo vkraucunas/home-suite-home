@@ -3,7 +3,7 @@
 `npm start`
 
 
-##Route documentation
+## Route documentation
 
 * `/lights` 
     * Lists data about all lights on the HUE bridge
