@@ -35,7 +35,22 @@ router.get('/:id/off', function(req,res,next) {
     })
 });
 
+router.get('/:id/brighter', function(req,res,next) {
+    let id = req.params.id;
+    let brightenBy = req.query.value || 5;
+    modifyLightById(id, brighten(brightenBy)).then(result => {
+       res.send(result); 
+    });
+});
 
+router.get('/:id/dimmer', function(req,res,next) {
+    let id = req.params.id;
+    let dimBy = req.query.value || 5;
+    modifyLightById(id, brighten(-dimBy)).then(result => {
+        res.send(result);
+    });
+
+});
 /* GET users listing. */
 router.get('/on', function(req, res, next) {
   modifyGroupById(0,turnOn);
@@ -88,4 +103,17 @@ function turnOn(obj) {
 
     return Object.assign(obj, modifier);
 }
+
+const brighten = (incrementValue) =>(obj) => {
+    let modifier = {
+	on: true,
+        brightness: obj.brightness + incrementValue >= 254 ? 254 : obj.brightness + incrementValue
+    }
+    //this function can be overloaded for negative brightness changes.  Protect against out of range issue
+    if(modifier.brightness <= 0) {modifier.brightness = 0};
+    return Object.assign(obj, modifier)
+}
+
+
+
 module.exports = router;

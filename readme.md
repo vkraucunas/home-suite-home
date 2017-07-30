@@ -16,3 +16,8 @@
 
 * `/lights/:id:/on` && `/lights/:id/off` 
     * Turns on/off light by id
+
+* `/lights/:id/brighter?value=20` && `/lights/:id/dimmer?value=20`
+    * Brightens or dims lights by optional value or by 5 (note: end value must be 0 > 254)
+
+
