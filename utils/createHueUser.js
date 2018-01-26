@@ -20,7 +20,7 @@ function openHueConnection(ip) {
     
     let client = new huejay.Client({
 	  host:     ip,
-	  timeout:  15000,            // Optional, timeout in milliseconds (15000 is the default) 
+	  timeout:  150000,            // Optional, timeout in milliseconds (15000 is the default) 
     });
     console.log('Creating User');
 	let user = new client.users.User;
@@ -30,9 +30,9 @@ function openHueConnection(ip) {
 		console.log(`New user created - Username: ${user.username}`);
 	  })
 	  .catch(error => {
-		if (error instanceof huejay.Error && error.type === 101) {
-		  return console.log(`Link button not pressed. Try again...`);
-		}
+		//if (error instanceof huejay.Error && error.type === 101) {
+		//  return console.log(`Link button not pressed. Try again...`);
+		//}
 	 
 		console.log(error);
 	  });
