@@ -6,7 +6,7 @@ const HUE_USERNAME = process.env.HUE_USERNAME;
 
 
 let client = new huejay.Client({
-  host:     '192.168.2.162',
+  host:     '192.168.1.13',
   username: HUE_USERNAME, 
   timeout:  15000
 });
@@ -37,7 +37,7 @@ router.get('/:id/off', function(req,res,next) {
 
 router.get('/:id/brighter', function(req,res,next) {
     let id = req.params.id;
-    let brightenBy = req.query.value || 5;
+    let brightenBy = Number(req.query.value || 5);
     modifyLightById(id, brighten(brightenBy)).then(result => {
        res.send(result); 
     });
@@ -45,7 +45,7 @@ router.get('/:id/brighter', function(req,res,next) {
 
 router.get('/:id/dimmer', function(req,res,next) {
     let id = req.params.id;
-    let dimBy = req.query.value || 5;
+    let dimBy = Number(req.query.value || 5);
     modifyLightById(id, brighten(-dimBy)).then(result => {
         res.send(result);
     });
