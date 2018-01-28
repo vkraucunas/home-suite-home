@@ -1,0 +1,7 @@
+version: '3'
+
+services:
+  home-suite-home:
+    build: .
+    ports:
+      - "3000:3000"
