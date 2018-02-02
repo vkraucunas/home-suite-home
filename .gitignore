@@ -33,3 +33,5 @@ npm-debug.log
 .env
 
 public/stylesheets/.sass-cache/
+Dockerfile
+.idea
