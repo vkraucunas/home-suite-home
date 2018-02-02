@@ -5,3 +5,9 @@ services:
     build: .
     ports:
       - "3000:3000"
+#  remote-dev:
+#    image: jhen0409/remotedev-server
+#    environment:
+#      - PORT=8000
+#    ports:
+#      - "8000:8000"

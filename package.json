@@ -3,7 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node --experimental-modules ./index.mjs"
+    "build": "flow-remove-types src/ -d lib/",
+    "start": "npm run build && node --harmony --experimental-modules ./lib/index.mjs",
+    "flow": "flow",
+    "flow:check": "flow check ./src/"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
@@ -15,7 +18,18 @@
     "express": "~4.13.1",
     "hbs": "~3.1.0",
     "huejay": "^1.5.0",
+    "ioredis": "^3.2.2",
     "morgan": "~1.6.1",
+    "redux": "^3.7.2",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.2.0",
     "serve-favicon": "~2.3.0"
+  },
+  "devDependencies": {
+    "flow-bin": "^0.64.0",
+    "flow-remove-types": "^1.2.3",
+    "flow-typed": "^2.2.3",
+    "remote-redux-devtools": "^0.5.12",
+    "remotedev-server": "^0.2.4"
   }
 }

@@ -1,0 +1,25 @@
+const ACTIONS = {
+    ON: 'ON',
+    OFF: 'OFF',
+    SUITE: {
+        VALIDATE: 'VALIDATE_SUITE',
+        INVALIDATE: 'INVALIDATE_SUITE',
+        RESEARCH: 'RESEARCH_SUITE'
+    },
+    DEVICE: {
+        ADD: 'DEVICE_ADD',
+        ON: 'DEVICE_ON',
+        OFF: 'DEVICE_OFF',
+        BRIGHTNESS_CHANGE: 'DEVICE_BRIGHTNESS_CHANGE',
+        FORGET: 'DEVICE_FORGET',
+        HEALTH_CHECK: 'DEVICE_HEALTH_CHECK',
+    },
+    DEVICES: {
+        VALIDATED:'VALIDATED',
+        INVALIDATED:'INVALIDATED',
+        RESEARCH: 'DEVICES_RESEARCHING',
+        UPDATED: 'DEVICES_UPDATED',
+    }
+};
+
+export default ACTIONS;
