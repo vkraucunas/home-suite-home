@@ -1,6 +1,6 @@
 //@flow
 import type {DataProvider} from "../services/data/dataProvider.mjs";
-import type {Store} from "../../flow-typed/npm/redux_v3.x.x";
+import type { Store } from 'redux';
 import PROVIDERS from "../services/data/providers/providerEnum.mjs";
 import ACTIONS from "../services/data/redux/enums/actionTypes.mjs";
 import huejay from 'huejay';
@@ -26,16 +26,16 @@ router.get('/', function(req, res, next) {
             console.log(err);  
           });
 });
-const getStoreFromReq = (req):Store => {
+const getStoreFromReq = (req):* => {
     const dataProvider:DataProvider = req.custom.dataProvider;
-    const store:Store = dataProvider.get(PROVIDERS.REDUX);
+    const store:* = dataProvider.get(PROVIDERS.REDUX);
     return store;
 };
 
 router.get('/:id/on', function(req, res, next) {
     let id = req.params.id;
     modifyLightById(id, turnOn).then(result => {
-        const store: Store = getStoreFromReq(req);
+        const store: * = getStoreFromReq(req);
         store.dispatch({type:ACTIONS.DEVICE.ON, payload: {id}});
         res.send(result);
     })
@@ -44,7 +44,7 @@ router.get('/:id/on', function(req, res, next) {
 router.get('/:id/off', function(req,res,next) {
     let id = req.params.id;
     modifyLightById(id, turnOff).then(result => {
-        const store: Store = getStoreFromReq(req);
+        const store: * = getStoreFromReq(req);
         store.dispatch({type:ACTIONS.DEVICE.OFF, payload: {id}});
         res.send(result);   
     })
@@ -54,7 +54,7 @@ router.get('/:id/brighter', function(req,res,next) {
     let id = req.params.id;
     let brightenBy = Number(req.query.value || 5);
     modifyLightById(id, brighten(brightenBy)).then(result => {
-        const store: Store = getStoreFromReq(req);
+        const store: * = getStoreFromReq(req);
         store.dispatch({type:ACTIONS.DEVICE.BRIGHTNESS_CHANGE, payload: {id}});
         res.send(result);
     });
@@ -64,7 +64,7 @@ router.get('/:id/dimmer', function(req,res,next) {
     let id = req.params.id;
     let dimBy = Number(req.query.value || 5);
     modifyLightById(id, brighten(-dimBy)).then(result => {
-        const store: Store = getStoreFromReq(req);
+        const store: * = getStoreFromReq(req);
         store.dispatch({type:ACTIONS.DEVICE.BRIGHTNESS_CHANGE, payload: {id}});
         res.send(result);
     });

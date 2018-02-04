@@ -1,47 +1,52 @@
 //@flow
 import RedisProvider from './providers/redisProvider.mjs';
-import PROVIDERS from './providers/providerEnum.mjs';
 import BaseProvider from './providers/baseProvider.mjs';
 import ReduxStoreProvider from './providers/reduxStoreProvider.mjs';
 
 export class DataProvider {
-    get:(provider:PROVIDERS) => *;
-    constructor(services:Map<PROVIDERS, $Subtype<BaseProvider>>) {
-        this.get = (serviceName:PROVIDERS) => services.get(serviceName);
+    get:(provider:string) => *;
+    constructor(services:Map<string, $Subtype<BaseProvider>>) {
+        this.get = (serviceName:string) => services.get(serviceName);
     }
 }
 
-const initServices = (servicesToInit:Map<PROVIDERS, $Subtype<BaseProvider>>) => {
+const initServices = (servicesToInit:Map<string, $Subtype<BaseProvider>>) => {
     console.log('Initializing data services');
 
     const serviceList: Array<$Subtype<BaseProvider>> = [];
 
+    const installService = x => {
+        if(!x) {return;}
+        serviceList.push(x)
+    }
     // We need to convert the input map into a promise array of init'd services
     // however we still need the keys to 'install' the provider
     Array.from(servicesToInit.keys())
-        .map(k => serviceList.push(servicesToInit.get(k).init()))
+        .map(k => installService(servicesToInit.get(k)))
 
-    return Promise.all(serviceList)
-        .then((results: Array<{key:PROVIDERS,service:$Subtype<BaseProvider>}>) => {
+    const result:Promise<DataProvider> = Promise.all(serviceList)
+        .then(results => {
             console.log('...data services init complete');
 
             const services = new Map();
-            results.map(x => services.set(x.key, x.service));
+            results.map((x:{key:string, service:*}) => services.set(x.key, x.service));
 
-            return new DataProvider(services);
-        })
+            return services;
+        }).then(x => new DataProvider(x));
+
+    return result;
 }
 
-export default {
-    init: ():Promise<DataProvider> => {
-        const servicesToInit: Map<PROVIDERS, $Subtype<BaseProvider>> = new Map();
-        const installProvider = (provider: $Subtype<BaseProvider>) => {
-            servicesToInit.set(provider.key, provider);
-        }
-
-        installProvider(new RedisProvider());
-        installProvider(new ReduxStoreProvider());
-
-        return initServices(servicesToInit);
+const init = () => {
+    const servicesToInit: Map<string, $Subtype<BaseProvider>> = new Map();
+    const installProvider = (provider: $Subtype<BaseProvider>) => {
+        servicesToInit.set(provider.key, provider);
     }
+
+    installProvider(new RedisProvider());
+    installProvider(new ReduxStoreProvider());
+
+    return initServices(servicesToInit);
 }
+
+export default {init}

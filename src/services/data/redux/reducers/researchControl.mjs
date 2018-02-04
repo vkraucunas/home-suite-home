@@ -1,9 +1,9 @@
-//@flow
+// @flow
 import ACTIONS from "../enums/actionTypes.mjs";
-import typeof {IAction} from "../actions/IAction.mjs";
 import StateTypes from "../enums/stateTypes.mjs";
+import Action from '../actions/Action.mjs';
 
-const researchControl = (state:* = {}, action:IAction) => {
+const researchControl = (state:* = {}, action:Action) => {
     switch (action.type) {
         case ACTIONS.SUITE.INVALIDATE:
             return Object.assign({}, state, {status: StateTypes.INVALID});

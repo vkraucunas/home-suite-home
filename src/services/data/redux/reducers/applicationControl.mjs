@@ -1,10 +1,10 @@
 //@flow
 
 import StateTypes from "../enums/stateTypes.mjs";
-import type {IAction} from "../actions/IAction.mjs";
 import ACTIONS from "../enums/actionTypes.mjs";
+import Action from "../actions/Action.mjs";
 
-const applicationControlReducer = (state:* = {}, action:IAction) => {
+const applicationControlReducer = (state:* = {}, action:$Subtype<Action>) => {
     switch (action.type) {
         case ACTIONS.ON:
             return Object.assign({},state, { status: StateTypes.ACTIVATING});

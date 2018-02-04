@@ -1,31 +1,33 @@
-//@flow
+// @flow
 import { DataProvider } from "./data/dataProvider.mjs";
 import PROVIDERS from "./data/providers/providerEnum.mjs";
-import type { Store } from 'redux';
 import ACTIONS from "./data/redux/enums/actionTypes.mjs";
 import DeviceService from "./DeviceService.mjs";
+import AsyncAction from './data/redux/actions/AsyncAction.mjs';
 import Action from './data/redux/actions/Action.mjs';
 
-const validateSuite = () => new Action(ACTIONS.SUITE.VALIDATE);
-const invalidateSuite = () => new Action(ACTIONS.SUITE.INVALIDATE);
-const launchSuite = () => new Action(ACTIONS.ON);
+
+const invalidateSuite = (err) => new Action(ACTIONS.SUITE.INVALIDATE,err);
+const validateSuite = new AsyncAction(Promise.resolve(new Action(ACTIONS.SUITE.VALIDATE)), invalidateSuite);
+const launchSuite = new Action(ACTIONS.ON);
+const shutdownSuite = () => new Action(ACTIONS.OFF);
 
 class SuiteService {
     invalidate: () => void;
     init: () => void;
 
     constructor(dataProvider:DataProvider) {
-        const redux: Store = dataProvider.get(PROVIDERS.REDUX);
+        const redux = dataProvider.get(PROVIDERS.REDUX);
         const deviceService:DeviceService = new DeviceService(dataProvider);
 
         const dispatch = redux.dispatch;
         this.invalidate = () => dispatch(invalidateSuite(deviceService));
         this.init = () => {
-            dispatch(launchSuite());
+            dispatch(launchSuite);
             deviceService.research();
-            dispatch((d) => d(validateSuite()));
+            dispatch(new AsyncAction(Promise.resolve(validateSuite), (err) => invalidateSuite(err)));
+            //dispatch((d) => d(validateSuite()));
         }
-
     }
 }
 

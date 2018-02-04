@@ -1,10 +1,15 @@
 //@flow
-import type {IAction} from './IAction.mjs';
-import ACTIONS from "../enums/actionTypes.mjs";
+import BaseAction from "./BaseAction.mjs";
 
-class Action implements IAction {
-    constructor(type:ACTIONS, payload: any) {
-        return {type,payload};
+class Action extends BaseAction {
+    type:string;
+    payload:*;
+    toJSON:*;
+    constructor(type:string, payload: *) {
+        super();
+        this.type = type;
+        this.payload = payload;
+        this.toJSON = () => {type,payload};
     }
 }
 

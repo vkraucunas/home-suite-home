@@ -1,16 +1,17 @@
-//@flow
+// @flow
 import Server from './server.mjs';
 import DataProvider from './services/data/dataProvider.mjs';
-import DeviceService from "./services/DeviceService.mjs";
 import SuiteService from "./services/SuiteService.mjs";
 
-const init = () => {
-  DataProvider.init().then((dataProvider:DataProvider) => {
-        const suiteService = new SuiteService(dataProvider);
-        suiteService.init();
+const start = () => {
+    DataProvider.init().then(dataProvider => {
+        new SuiteService(dataProvider);
 
-        Server.init(dataProvider);
-    }).catch(console.log);
+
+        new Server(dataProvider);
+
+    });
+
 };
 
-export default { launch: init}
+export default { launch: start}

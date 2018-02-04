@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "build": "flow-remove-types src/ -d lib/",
-    "start": "npm run build && node --harmony --experimental-modules ./lib/index.mjs",
+    "start": "npm run flow:check && npm run build && node --harmony --experimental-modules ./lib/index.mjs",
     "flow": "flow",
-    "flow:check": "flow check ./src/"
+    "flow:check": "flow check ./src/ --color always"
   },
   "dependencies": {
     "body-parser": "~1.13.2",

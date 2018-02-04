@@ -1,16 +1,14 @@
 //@flow
-import { DataProvider } from "./data/dataProvider.mjs";
+import type {DataProvider} from "./data/dataProvider.mjs";
 import PROVIDERS from "./data/providers/providerEnum.mjs";
-import type { Store } from 'redux';
 import ACTIONS from "./data/redux/enums/actionTypes.mjs";
 import HueMock from './data/mock/hue.mjs';
 import Action from "./data/redux/actions/Action.mjs";
 
-
-const research:Promise<void> = dispatch => {
+const research = dispatch => {
     return Promise.resolve(HueMock.map(x => {
         dispatch(new Action(ACTIONS.DEVICE.ADD, x));
-    }));
+    })).then(() => {});
 };
 
 const researchingDevices = () => new Action(ACTIONS.DEVICES.RESEARCH);
@@ -20,10 +18,10 @@ class DeviceService {
     research: () => void;
 
     constructor(dataProvider:DataProvider) {
-        const store: Store = dataProvider.get(PROVIDERS.REDUX);
+        const store: * = (dataProvider.get(PROVIDERS.REDUX):*);
         const dispatch = store.dispatch;
 
-        const installSubscription = (redux:Store) => {
+        const installSubscription = (redux:*) => {
             const state = redux.getState();
             let getLength = (state) => {
                 if(state.deviceControl.devices) {

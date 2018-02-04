@@ -1,7 +1,5 @@
 //@flow
-import redux from 'redux'
-import remoteReduxDevtools from 'remote-redux-devtools';
-
+import Redux from 'redux';
 import BaseProvider from './baseProvider.mjs';
 import PROVIDERS from "./providerEnum.mjs";
 import rootReducer from '../redux/rootReducer.mjs';
@@ -9,16 +7,13 @@ import defaultState from '../redux/defaultState.mjs';
 import thunk from 'redux-thunk';
 import reduxLogger from 'redux-logger';
 
-// not working right now
-// import remotedev from 'remotedev-server';
-// remotedev({hostname: 'remote-dev', port: '8000', realtime: true});
-
+const {createStore, applyMiddleware} = Redux;
 const actionFormatter = (action,time,took) => `=> [${action.type}] (in ${took.toFixed(2)} ms)`;
 
 class ReduxProvider extends BaseProvider {
-    key:PROVIDERS;
-
-    _reduxStore: Redux;
+    key:typeof PROVIDERS.REDUX;
+    service: *;
+    _reduxStore: *;
 
     constructor() {
         super();
@@ -37,15 +32,20 @@ class ReduxProvider extends BaseProvider {
             thunk.default,
 
         ];
-        console.log('default state', defaultState)
-        this._reduxStore = redux.createStore(
+
+        this._reduxStore = createStore(
             rootReducer,
             defaultState,
-            redux.applyMiddleware(...middleware),
+            applyMiddleware(...middleware),
             // remoteReduxDevtools.composeWithDevTools({ realtime: true, port: 8000 })
         );
-        this.init = () => Promise.resolve({key: this.key, service: this._reduxStore})
+
+        this.service = this._reduxStore;
     }
+
+
+
+
 }
 
 export default ReduxProvider;
