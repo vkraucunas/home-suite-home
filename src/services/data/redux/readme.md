@@ -15,21 +15,21 @@
  * ON
  * OFF
  * SUITE
-  * VALIDATE
-  * INVALIDATE
-  * RESEARCH
+   * VALIDATE
+   * INVALIDATE
+   * RESEARCH
  * DEVICE
-  * ADD
-  * ON
-  * OFF
-  * BRIGHTNESS_CHANGE (ooofh, this doesnt belong here)
-  * FORGET
-  * HEALTH_CHECK
+   * ADD
+   * ON
+   * OFF
+   * BRIGHTNESS_CHANGE (ooofh, this doesnt belong here)
+   * FORGET
+   * HEALTH_CHECK
  * DEVICES
-  * VALIDATED
-  * INVALIDATED
-  * RESEARCH
-  * UPDATED
+   * VALIDATED
+   * INVALIDATED
+   * RESEARCH
+   * UPDATED
 
 #### Classes for Extension
 * Device
