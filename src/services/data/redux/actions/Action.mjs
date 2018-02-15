@@ -9,7 +9,7 @@ class Action extends BaseAction {
         super();
         this.type = type;
         this.payload = payload;
-        this.toJSON = () => {type,payload};
+        return {type,payload};
     }
 }
 
