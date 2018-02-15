@@ -1,11 +1,12 @@
 //@flow
 import Redux from 'redux';
+import thunk from 'redux-thunk';
+import reduxLogger from 'redux-logger';
+
 import BaseProvider from './baseProvider.mjs';
 import PROVIDERS from "./providerEnum.mjs";
 import rootReducer from '../redux/rootReducer.mjs';
 import defaultState from '../redux/defaultState.mjs';
-import thunk from 'redux-thunk';
-import reduxLogger from 'redux-logger';
 
 const {createStore, applyMiddleware} = Redux;
 const actionFormatter = (action,time,took) => `=> [${action.type}] (in ${took.toFixed(2)} ms)`;
@@ -42,10 +43,6 @@ class ReduxProvider extends BaseProvider {
 
         this.service = this._reduxStore;
     }
-
-
-
-
 }
 
 export default ReduxProvider;
