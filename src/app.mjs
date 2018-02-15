@@ -5,7 +5,7 @@ import SuiteService from "./services/SuiteService.mjs";
 
 const start = () => {
     DataProvider.init().then(dataProvider => {
-        new SuiteService(dataProvider);
+        new SuiteService(dataProvider).init();
 
 
         new Server(dataProvider);
