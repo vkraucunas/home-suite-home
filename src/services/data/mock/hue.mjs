@@ -22,8 +22,7 @@ export default [{
             "swversion": "5.105.0.21169"
         }, "changed": {}
     }, "state": {"attributes": {"on": true, "reachable": true, "bri": 120, "alert": "none"}, "changed": {}}
-}];
-[{}, {
+}, {
     "attributes": {
         "attributes": {
             "id": "3",

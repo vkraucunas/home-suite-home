@@ -7,9 +7,9 @@ import AsyncAction from './data/redux/actions/AsyncAction.mjs';
 import Action from './data/redux/actions/Action.mjs';
 
 
-const invalidateSuite = (err) => new Action(ACTIONS.SUITE.INVALIDATE,err);
-const validateSuite = new AsyncAction(Promise.resolve(new Action(ACTIONS.SUITE.VALIDATE)), invalidateSuite);
-const launchSuite = new Action(ACTIONS.ON);
+const invalidateSuite = () => new Action(ACTIONS.SUITE.INVALIDATE);
+const validateSuite = () => new AsyncAction(Promise.resolve(new Action(ACTIONS.SUITE.VALIDATE)), invalidateSuite);
+const launchSuite = () =>new Action(ACTIONS.ON);
 const shutdownSuite = () => new Action(ACTIONS.OFF);
 
 class SuiteService {
@@ -21,12 +21,16 @@ class SuiteService {
         const deviceService:DeviceService = new DeviceService(dataProvider);
 
         const dispatch = redux.dispatch;
-        this.invalidate = () => dispatch(invalidateSuite(deviceService));
+        this.invalidate = () => dispatch(invalidateSuite());
         this.init = () => {
-            dispatch(launchSuite);
+            // Mark suite as On
+            dispatch(launchSuite());
+
+            // Because devices likely changed lets do our homework
             deviceService.research();
-            dispatch(new AsyncAction(Promise.resolve(validateSuite), (err) => invalidateSuite(err)));
-            //dispatch((d) => d(validateSuite()));
+
+
+            dispatch(validateSuite());
         }
     }
 }
