@@ -1,10 +1,12 @@
 // @flow
+import HueJay from 'huejay';
+
 import Controller from "./Controller.mjs";
-import HueMock from '../services/data/mock/hue.mjs';
+//import HueMock from '../services/data/mock/hue.mjs';
 import ACTIONS from "../services/data/redux/enums/actionTypes.mjs";
 import Action from "../services/data/redux/actions/Action.mjs";
 
-import Device from '../models/Device.mjs';
+import Light from '../models/Light.mjs';
 import AsyncAction from "../services/data/redux/actions/AsyncAction.mjs";
 
 
@@ -25,18 +27,24 @@ const hueToDeviceDTO = (rawInput: *) => {
     //     "state": {"attributes": {"on": false, "reachable": true, "bri": 145, "alert": "none"}, "changed": {}}
     // }
 
-    const result = new Device()
+    const result = new Light()
         .set('id', rawInput.attributes.attributes.uniqueid)
         .set('reachable', rawInput.state.attributes.reachable)
+        .set('disabled', rawInput.state.attributes.reachable)
         .set('on', rawInput.state.attributes.on)
-        .set('custom', {rawInput});
+        .set('rawInput', rawInput);
 
     return result;
 };
 
-const researchLights = Promise.resolve(dispatch => HueMock.map(x => {
-    dispatch(new Action(ACTIONS.DEVICE.ADD, {data: hueToDeviceDTO(x)}));
-}));
+const researchLights = (client:HueJay) => dispatch =>
+    client.lights.getAll()
+        .then(lights => {
+            lights.map(x => {
+                dispatch(new Action(ACTIONS.DEVICE.ADD, {data: hueToDeviceDTO(x)}));
+            });
+        })
+        .catch(console.log);
 
 
 class HueController extends Controller {
@@ -45,10 +53,18 @@ class HueController extends Controller {
     constructor(input: *) {
         const defaults = {
             key: undefined,
+            ip_address: ''
         };
         super(Object.assign({}, defaults, input));
 
-        this.research = new AsyncAction(researchLights, new Action(ACTIONS.DEVICES.INVALIDATED));
+        let client = new HueJay.Client({
+            host:     this.get('ip_address'),
+            username: this.get('key'),
+            timeout:  15000
+        });
+
+        const researchMethod = researchLights(client);
+        this.research = new AsyncAction(researchMethod, new Action(ACTIONS.DEVICES.INVALIDATED));
     }
 }
 

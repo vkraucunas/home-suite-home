@@ -12,9 +12,8 @@ class Device extends BaseModel{
             reachable:undefined,
             enabled:true,
             on:undefined,
-        }
-        super(defaults,input);
-        this.modelConstructor = this.constructor;
+        };
+        super(Object.assign({},defaults,input));
     }
 }
 

@@ -13,7 +13,7 @@ class DeviceService {
     research: () => void;
 
     constructor(dataProvider:DataProvider) {
-        const store = (dataProvider.get(PROVIDERS.REDUX));
+        const store = dataProvider.get(PROVIDERS.REDUX);
         const dispatch = store.dispatch;
 
         const installSubscription = (redux:*) => {
@@ -24,7 +24,7 @@ class DeviceService {
                 } else {
                     return 0;
                 }
-            }
+            };
             let length = getLength(state);
 
             return redux.subscribe(() => {
@@ -35,19 +35,27 @@ class DeviceService {
                     dispatch({type:ACTIONS.DEVICES.VALIDATED, payload:{length}});
                 }
             });
-        }
+        };
 
         this.research = () => {
             const uninstall = installSubscription(store);
             dispatch(researchingDevices());
 
             const cont:HueController = new HueController({
-                'ip_address': '192.168.1.2',
+                'ip_address': '192.168.1.13',
                 'key': process.env.HUE_USERNAME,
             });
 
             cont.research(dispatch)
                 .then(() => {
+                    const io = dataProvider.get(PROVIDERS.SOCKETIO);
+                    io.on('connection', (dataProvider => (socket) =>{
+                        const redux = dataProvider.get(PROVIDERS.REDUX);
+                        const state = redux.getState();
+
+                        socket.emit('news', state);
+
+                    })(dataProvider));
 
                     dispatch(updateDevices());
                     uninstall();

@@ -10,7 +10,6 @@ const convertObjectToMap = (input:*) => {
 };
 
 class BaseModel{
-    modelConstructor: *;
     get: (name:string) => *;
     set: (name:string, value:*) => $Subtype<BaseModel>;
     _props: *;
@@ -22,7 +21,7 @@ class BaseModel{
             assignedObject[name] = value;
             let result = Object.assign({}, this._props,assignedObject);
 
-            return new this.modelConstructor(result);
+            return new this.constructor(result);
         }
     }
 }

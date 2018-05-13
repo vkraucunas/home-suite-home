@@ -1,14 +1,15 @@
 // @flow
 import Device from "./Device.mjs";
 
-class Controller extends Device{
+class Light extends Device {
     constructor(input:*) {
         const defaults = {
-            connection_type: 'IP',
-            ip_address: '',
+            color: undefined,
+            brightness: undefined,
+            disabled: undefined,
         };
         super(Object.assign({},defaults,input));
     }
 }
 
-export default Controller;
+export default Light;

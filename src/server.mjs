@@ -1,4 +1,5 @@
 //@flow
+import socket from 'socket.io';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
@@ -11,6 +12,8 @@ import denon from './routes/denon.mjs';
 
 import http from 'http';
 import type {DataProvider} from "./services/data/dataProvider.mjs";
+import dataProvider from "./services/data/dataProvider.mjs";
+import PROVIDERS from "./services/data/providers/providerEnum.mjs";
 
 const debug = console.log;
 
@@ -43,7 +46,7 @@ const start = (dataProvider:DataProvider) => {
     if (app.get('env') === 'development') {
         app.use(function(err, req, res, next) {
             res.status(err.status || 500); //$FlowShutUp
-            res.render('error', {
+            res.json({
                 message: err.message, //$FlowShutUp
                 error: err
             });
@@ -51,40 +54,33 @@ const start = (dataProvider:DataProvider) => {
     }
     app.use(function(err, req, res) {
         res.status(err.status || 500);//$FlowShutUp
-        res.render('error', {
+        res.json({
             message: err.message,//$FlowShutUp
             error: {}
         });
     });
 
-
-    /**
-     * Get port from environment and store in Express.
-     */
-
     var port = 3000;
     app.set('port', port);
 
-    /**
-     * Create HTTP server.
-     */
-
     var server = http.createServer(app);
-
-    /**
-     * Listen on provided port, on all network interfaces.
-     */
 
     server.listen(port);
     server.on('error', console.log);
     server.on('listening', onListening(server));
 
+    debug('Installing express server to dataProvider');
+    dataProvider.set({key:PROVIDERS.EXPRESS, service: app});
+
+    debug('Installing http server to dataProvider');
+    dataProvider.set({key:PROVIDERS.HTTP, service:server})
+
+    debug('Installing socket server to dataProvider');
+    dataProvider.set({key:PROVIDERS.SOCKETIO, service:socket(server)})
+
+
     return app;
 };
-
-/**
- * Event listener for HTTP server "listening" event.
- */
 
 const onListening = (server:*) => () =>{
     var addr = server.address();
@@ -92,7 +88,7 @@ const onListening = (server:*) => () =>{
         ? 'pipe ' + addr
         : 'port ' + addr.port;
     debug('Listening on ' + bind);
-}
+};
 
 class Server {
     constructor(dataProvider:DataProvider) {
